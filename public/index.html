@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahmet Video — Video İndirici</title>
+  <meta name="description"
+    content="YouTube, Tiktok, Twitter ve 1000+ siteden 4K, 2K, 1080p video indirin. Ücretsiz, hızlı ve güvenilir." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- Animated Background -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"
+              fill="url(#logoGrad)" />
+            <path d="M10 8L16 12L10 16V8Z" fill="white" />
+            <defs>
+              <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366f1" />
+                <stop offset="1" stop-color="#a855f7" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">Ahmet Video</span>
+      </div>
+      <div class="header-badges">
+        <span class="badge">4K</span>
+        <span class="badge">1000+ Site</span>
+        <span class="badge badge-free">Ücretsiz</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-tag">
+        <span class="pulse-dot"></span>
+        YouTube • Tiktok • Twitter • Instagram vs. kisaca hepsınden indirebilirsiniz
+      </div>
+      <h1 class="hero-title">
+        canim arkadaslarim icin<br />
+        <span class="gradient-text">istediğiniz gibi video indirin</span><br />
+        <3 </h1>
+          <p class="hero-subtitle">sadece size özel ;)</p>
+
+          <!-- URL Input -->
+          <div class="input-container" id="inputContainer">
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+              </div>
+              <input type="url" id="urlInput" class="url-input"
+                placeholder="Video linkini buraya yapıştırın... (YouTube, Tiktok, Twitter...)" autocomplete="off"
+                spellcheck="false" />
+              <button class="paste-btn" id="pasteBtn" title="Panodan Yapıştır">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              </button>
+            </div>
+            <button class="fetch-btn" id="fetchBtn">
+              <span class="btn-text"> video indir</span>
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Supported Sites -->
+          <div class="supported-sites">
+            <div class="site-pill">
+              <svg class="site-icon yt" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+              YouTube
+            </div>
+            <div class="site-pill">
+              <svg class="site-icon vimeo" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.17 0-.765.36-1.780 1.075L0 7.197a315.065 315.065 0 0 0 3.62-3.231C5.119 2.618 6.252 1.9 7.02 1.828c1.907-.183 3.081 1.122 3.523 3.917.475 3.008.805 4.884.991 5.627.550 2.496 1.153 3.742 1.813 3.742.512 0 1.284-.810 2.312-2.431 1.030-1.621 1.582-2.856 1.656-3.705.148-1.399-.404-2.101-1.656-2.101-.589 0-1.196.136-1.821.404 1.208-3.960 3.522-5.882 6.938-5.764 2.531.086 3.727 1.718 3.601 4.899z" />
+              </svg>
+              Vimeo
+            </div>
+            <div class="site-pill">
+              <svg class="site-icon twitter" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              Twitter/X
+            </div>
+            <div class="site-pill">
+              <svg class="site-icon twitch" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
+              </svg>
+              Twitch
+            </div>
+            <div class="site-pill site-more">+1000 Site</div>
+          </div>
+    </section>
+
+    <!-- Loading State -->
+    <div class="loading-card hidden" id="loadingCard">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring spinner-ring-2"></div>
+      </div>
+      <p class="loading-text">Video kontrol ediliyor...</p>
+      <p class="loading-sub">Format bilgileri alınıyor</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-card hidden" id="errorCard">
+      <div class="error-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      </div>
+      <p class="error-text" id="errorText">Bir hata oluştu</p>
+      <button class="try-again-btn" id="tryAgainBtn">Tekrar Dene</button>
+    </div>
+
+    <!-- Video Info Card -->
+    <div class="video-card hidden" id="videoCard">
+      <div class="video-info">
+        <div class="thumbnail-wrapper">
+          <img id="thumbnail" class="thumbnail" src="" alt="Thumbnail" />
+          <div class="duration-badge" id="durationBadge"></div>
+        </div>
+        <div class="video-meta">
+          <h2 class="video-title" id="videoTitle"></h2>
+          <div class="video-details">
+            <span class="detail-item" id="videoUploader"></span>
+            <span class="detail-sep" id="detailSep">•</span>
+            <span class="detail-item" id="videoViews"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Format Selection -->
+      <div class="format-section">
+        <h3 class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Format Seç
+        </h3>
+        <div class="format-grid" id="formatGrid">
+          <!-- Formats injected by JS -->
+        </div>
+      </div>
+
+      <!-- Download Button -->
+      <button class="download-btn hidden" id="downloadBtn">
+        <div class="download-btn-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span id="downloadBtnText">İndir</span>
+        </div>
+        <div class="download-btn-progress" id="downloadProgress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </button>
+
+      <!-- Progress Info + Cancel -->
+      <div class="progress-info hidden" id="progressInfo">
+        <div class="progress-top">
+          <div class="progress-stats">
+            <span id="progressPercent">0%</span>
+            <span id="progressSpeed"></span>
+            <span id="progressEta"></span>
+          </div>
+          <button class="cancel-btn" id="cancelBtn" title="İndirmeyi İptal Et">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            İptal
+          </button>
+        </div>
+        <p class="progress-status" id="progressStatus">İndiriliyor...</p>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <section class="features">
+      <div class="feature-card">
+        <div class="feature-icon feat-quality">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        </div>
+        <h3>4K'ya kadar ındırebılıonuz</h3>
+        <p>videonun max kac destekliyosa o kadar çözünürlükte ındırın 4K 2K 1080p vs gibi</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon feat-fast">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+        </div>
+        <h3>cok hizli</h3>
+        <p>sızın icin optimize edilmiş indirme altyapısı ile videolarınızı saniyeler içinde ındırebilirsniz.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon feat-sites">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+        </div>
+        <h3>1000+ platform</h3>
+        <p>YouTube, Tiktok, Insta, Twitter, Twitch ve yuzlerce başka platformdan indirebılıonuz</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon feat-audio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
+          </svg>
+        </div>
+        <h3>ses olarakda indirebilionuz</h3>
+        <p>videolardan mp3 (ses) olarakda indirebilirsnz</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>ahmet video — sadece arkadaslarım ve kendim icin</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+# Geçici indirme dosyaları
+temp_downloads/
+/tmp/
+
+# Hassas veriler (Render'a ayrıca yüklenir)
+cookies.txt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Ortam
+.env
+.venv/
+venv/
+
+# Windows araçları (cloud'a atanmaz)
+*.exe
+*.bat
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
