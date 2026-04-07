@@ -10,30 +10,60 @@ let currentSessionId    = null;
 // =====================
 // DOM Elements
 // =====================
-const urlInput       = document.getElementById('urlInput');
-const fetchBtn       = document.getElementById('fetchBtn');
-const pasteBtn       = document.getElementById('pasteBtn');
-const loadingCard    = document.getElementById('loadingCard');
-const errorCard      = document.getElementById('errorCard');
-const errorText      = document.getElementById('errorText');
-const tryAgainBtn    = document.getElementById('tryAgainBtn');
-const videoCard      = document.getElementById('videoCard');
-const thumbnail      = document.getElementById('thumbnail');
-const durationBadge  = document.getElementById('durationBadge');
-const videoTitle     = document.getElementById('videoTitle');
-const videoUploader  = document.getElementById('videoUploader');
-const videoViews     = document.getElementById('videoViews');
-const detailSep      = document.getElementById('detailSep');
-const formatGrid     = document.getElementById('formatGrid');
-const downloadBtn    = document.getElementById('downloadBtn');
-const downloadBtnText= document.getElementById('downloadBtnText');
-const progressBar    = document.getElementById('progressBar');
-const progressInfo   = document.getElementById('progressInfo');
-const progressPercent= document.getElementById('progressPercent');
-const progressSpeed  = document.getElementById('progressSpeed');
-const progressEta    = document.getElementById('progressEta');
-const progressStatus = document.getElementById('progressStatus');
-const cancelBtn      = document.getElementById('cancelBtn');
+const urlInput        = document.getElementById('urlInput');
+const fetchBtn        = document.getElementById('fetchBtn');
+const pasteBtn        = document.getElementById('pasteBtn');
+const loadingCard     = document.getElementById('loadingCard');
+const errorCard       = document.getElementById('errorCard');
+const errorText       = document.getElementById('errorText');
+const tryAgainBtn     = document.getElementById('tryAgainBtn');
+const videoCard       = document.getElementById('videoCard');
+const thumbnail       = document.getElementById('thumbnail');
+const durationBadge   = document.getElementById('durationBadge');
+const videoTitle      = document.getElementById('videoTitle');
+const videoUploader   = document.getElementById('videoUploader');
+const videoViews      = document.getElementById('videoViews');
+const detailSep       = document.getElementById('detailSep');
+const formatGrid      = document.getElementById('formatGrid');
+const downloadBtn     = document.getElementById('downloadBtn');
+const downloadBtnText = document.getElementById('downloadBtnText');
+const progressBar     = document.getElementById('progressBar');
+const progressInfo    = document.getElementById('progressInfo');
+const progressPercent = document.getElementById('progressPercent');
+const progressSpeed   = document.getElementById('progressSpeed');
+const progressEta     = document.getElementById('progressEta');
+const progressStatus  = document.getElementById('progressStatus');
+const cancelBtn       = document.getElementById('cancelBtn');
+const newDownloadRow  = document.getElementById('newDownloadRow');
+const newDownloadBtn  = document.getElementById('newDownloadBtn');
+const statusBar       = document.getElementById('statusBar');
+const statusBarText   = document.getElementById('statusBarText');
+
+// =====================
+// Startup: check server status
+// =====================
+async function checkServerStatus() {
+  try {
+    const res = await fetch('/api/status');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.ffmpeg) {
+      statusBarText.textContent = '⚠️ ffmpeg bulunamadı — yüksek kalitede video birleştirme çalışmayabilir. install.bat çalıştırın.';
+      statusBar.classList.remove('hidden');
+    }
+    if (!data.ytdlp) {
+      statusBarText.textContent = '❌ yt-dlp bulunamadı! install.bat dosyasını çalıştırın.';
+      statusBar.classList.remove('hidden');
+    }
+  } catch {
+    // Server might not be ready yet — ignore
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  urlInput.focus();
+  checkServerStatus();
+});
 
 // =====================
 // Event Listeners
@@ -44,51 +74,107 @@ urlInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') handleFetch();
 });
 
+// Auto-fetch on paste
 urlInput.addEventListener('paste', () => {
   setTimeout(() => {
     const val = urlInput.value.trim();
     if (val && isValidUrl(val)) handleFetch();
-  }, 50);
+  }, 80);
 });
 
 pasteBtn.addEventListener('click', async () => {
   try {
     const text = await navigator.clipboard.readText();
-    if (text) {
+    if (text && text.trim()) {
       urlInput.value = text.trim();
-      urlInput.focus();
-      if (isValidUrl(text.trim())) handleFetch();
+      urlInput.dispatchEvent(new Event('input'));
+      if (isValidUrl(text.trim())) {
+        setTimeout(() => handleFetch(), 50);
+      } else {
+        urlInput.focus();
+      }
     }
   } catch {
+    // Clipboard permission denied or not available (common on Android WebView)
     urlInput.focus();
+    showToast('Panoya erişim reddedildi. URL\'yi manuel yapıştırın.');
   }
 });
 
 tryAgainBtn.addEventListener('click', () => {
   hideAll();
   urlInput.focus();
+  urlInput.select();
 });
 
 downloadBtn.addEventListener('click', handleDownload);
 cancelBtn.addEventListener('click', handleCancel);
 
+newDownloadBtn.addEventListener('click', () => {
+  hideAll();
+  urlInput.value = '';
+  urlInput.focus();
+  currentVideoInfo = null;
+  selectedFormat = null;
+  isDownloading = false;
+  currentSessionId = null;
+  fetchBtn.querySelector('.btn-text').textContent = 'Analiz Et';
+  fetchBtn.classList.remove('loading');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Ctrl+V shortcut (desktop)
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
     setTimeout(() => {
       if (document.activeElement !== urlInput) return;
       const val = urlInput.value.trim();
       if (val && isValidUrl(val)) handleFetch();
-    }, 100);
+    }, 150);
+  }
+  // Escape to reset
+  if (e.key === 'Escape' && !isDownloading) {
+    hideAll();
+    urlInput.focus();
   }
 });
 
-window.addEventListener('DOMContentLoaded', () => urlInput.focus());
+// =====================
+// Toast notification
+// =====================
+function showToast(msg, duration = 3000) {
+  let toast = document.getElementById('_toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = '_toast';
+    Object.assign(toast.style, {
+      position: 'fixed', bottom: '24px', left: '50%',
+      transform: 'translateX(-50%)',
+      background: 'rgba(30,30,50,0.95)',
+      border: '1px solid rgba(255,255,255,0.1)',
+      color: '#f0f0ff', padding: '12px 20px',
+      borderRadius: '10px', fontSize: '13px',
+      fontFamily: 'inherit', zIndex: '9999',
+      pointerEvents: 'none', whiteSpace: 'nowrap',
+      boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+      transition: 'opacity 0.3s ease',
+    });
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, duration);
+}
 
 // =====================
 // Helpers
 // =====================
 function isValidUrl(str) {
-  try { new URL(str); return true; } catch { return false; }
+  try {
+    const u = new URL(str);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch { return false; }
 }
 
 function formatFileSize(bytes) {
@@ -181,12 +267,20 @@ function showVideoCard(info) {
   progressBar.style.width = '0%';
   progressBar.style.background = '';
   progressInfo.classList.add('hidden');
-  selectedFormat    = null;
-  isDownloading     = false;
-  currentSessionId  = null;
+  newDownloadRow.classList.add('hidden');
+  selectedFormat   = null;
+  isDownloading    = false;
+  currentSessionId = null;
+
+  if (progressEventSource) {
+    progressEventSource.close();
+    progressEventSource = null;
+  }
 
   videoCard.classList.remove('hidden');
-  videoCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  setTimeout(() => {
+    videoCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
 }
 
 // =====================
@@ -205,9 +299,9 @@ function buildFormatGrid(formats) {
     card.className = 'format-card';
     card.dataset.index = index;
 
-    const badge      = getQualityBadge(fmt.label, fmt.height);
-    const sizeStr    = formatFileSize(fmt.filesize);
-    const extDisplay = (fmt.ext || 'MP4').toUpperCase();
+    const badge       = getQualityBadge(fmt.label, fmt.height);
+    const sizeStr     = formatFileSize(fmt.filesize);
+    const extDisplay  = (fmt.ext || 'MP4').toUpperCase();
     const labelDisplay = fmt.isAudioOnly ? '🎵 MP3' : fmt.label;
 
     card.innerHTML = `
@@ -217,16 +311,17 @@ function buildFormatGrid(formats) {
       ${badge ? `<div class="format-badge ${badge.cls}">${badge.text}</div>` : ''}
       <div class="format-check">
         <svg viewBox="0 0 24 24" fill="none">
-          <polyline points="20 6 9 17 4 12"/>
+          <polyline points="20 6 9 17 4 12" stroke="white" stroke-width="3"/>
         </svg>
       </div>
     `;
 
+    // Touch + click support
     card.addEventListener('click', () => selectFormat(index, card, fmt));
     formatGrid.appendChild(card);
   });
 
-  // Auto-select best quality (first non-audio)
+  // Auto-select highest quality (first non-audio)
   const firstVideo = formats.findIndex(f => !f.isAudioOnly);
   if (firstVideo !== -1) {
     const firstCard = formatGrid.querySelector(`[data-index="${firstVideo}"]`);
@@ -240,10 +335,21 @@ function selectFormat(index, card, fmt) {
   selectedFormat = fmt;
 
   downloadBtn.classList.remove('hidden');
+  downloadBtn.classList.remove('downloading');
+  progressInfo.classList.add('hidden');
+  newDownloadRow.classList.add('hidden');
+  progressBar.style.width = '0%';
+  progressBar.style.background = '';
+
   const qualStr = fmt.isAudioOnly
-    ? 'MP3 Ses İndir'
-    : `${fmt.label} ${(fmt.ext || 'MP4').toUpperCase()} İndir`;
+    ? '🎵 MP3 Ses İndir'
+    : `⬇ ${fmt.label} ${(fmt.ext || 'MP4').toUpperCase()} İndir`;
   downloadBtnText.textContent = qualStr;
+
+  // Allow re-download if previously completed
+  if (!isDownloading) {
+    downloadBtn.classList.remove('downloading');
+  }
 }
 
 // =====================
@@ -253,8 +359,8 @@ async function handleFetch() {
   const url = urlInput.value.trim();
 
   if (!url) {
-    urlInput.parentElement.style.borderColor = 'rgba(239,68,68,0.5)';
-    setTimeout(() => { urlInput.parentElement.style.borderColor = ''; }, 1500);
+    urlInput.parentElement.style.boxShadow = '0 0 0 2px rgba(239,68,68,0.4)';
+    setTimeout(() => { urlInput.parentElement.style.boxShadow = ''; }, 1500);
     urlInput.focus();
     return;
   }
@@ -277,8 +383,8 @@ async function handleFetch() {
     currentVideoInfo = data;
     showVideoCard(data);
   } catch (err) {
-    if (err.name === 'TypeError' && err.message.includes('fetch')) {
-      showError('Sunucuya bağlanılamadı. Sunucunun çalıştığından emin olun.');
+    if (err.name === 'TypeError' && err.message.toLowerCase().includes('fetch')) {
+      showError('Sunucuya bağlanılamadı. start.bat ile sunucuyu başlatın ve sayfayı yenileyin.');
     } else {
       showError(err.message || 'Beklenmeyen bir hata oluştu.');
     }
@@ -300,10 +406,11 @@ async function handleDownload() {
   downloadBtn.classList.add('downloading');
   downloadBtnText.textContent = 'Hazırlanıyor...';
   progressInfo.classList.remove('hidden');
+  newDownloadRow.classList.add('hidden');
   progressPercent.textContent = '0%';
   progressSpeed.textContent   = '';
   progressEta.textContent     = '';
-  progressStatus.textContent  = selectedFormat.isAudioOnly ? 'Ses indiriliyor...' : 'Video indiriliyor...';
+  progressStatus.textContent  = selectedFormat.isAudioOnly ? '🎵 Ses indiriliyor...' : '⬇ Video indiriliyor...';
   progressBar.style.width     = '0%';
   progressBar.style.background= '';
 
@@ -341,14 +448,14 @@ async function handleDownload() {
         const pct = Math.min(Math.round(data.percent || 0), 99);
         progressBar.style.width       = `${pct}%`;
         progressPercent.textContent   = `${pct}%`;
-        if (data.speed) progressSpeed.textContent = data.speed;
-        if (data.eta)   progressEta.textContent   = `ETA ${data.eta}`;
+        if (data.speed) progressSpeed.textContent = `🚀 ${data.speed}`;
+        if (data.eta)   progressEta.textContent   = `⏱ ${data.eta}`;
       }
 
       if (data.status === 'merging') {
         progressBar.style.width     = '99%';
         progressPercent.textContent = '99%';
-        progressStatus.textContent  = 'Video+ses birleştiriliyor (ffmpeg)...';
+        progressStatus.textContent  = '🔧 Video+ses birleştiriliyor...';
         progressSpeed.textContent   = '';
         progressEta.textContent     = '';
       }
@@ -356,35 +463,39 @@ async function handleDownload() {
       if (data.status === 'done' && data.fileReady) {
         progressBar.style.width     = '100%';
         progressPercent.textContent = '100%';
-        progressStatus.textContent  = 'Hazır! İndirme başlıyor...';
+        progressStatus.textContent  = '✅ Hazır! İndirme başlıyor...';
         progressSpeed.textContent   = '';
         progressEta.textContent     = '';
         downloadBtnText.textContent = '✓ Tamamlandı!';
 
         progressEventSource.close();
         progressEventSource = null;
+        isDownloading = false;
 
-        // Build ASCII-safe filename — embed in URL path so browser saves with correct name
+        // Build a safe ASCII filename
         const ext = selectedFormat.ext || 'mp4';
         const safeTitle = (currentVideoInfo.title || 'video')
-          .replace(/[^\x20-\x7E]/g, '')          // strip non-ASCII (Turkish etc)
-          .replace(/[^a-zA-Z0-9 \-_.()]/g, '_')  // replace special chars
+          .replace(/[^\x20-\x7E]/g, '')
+          .replace(/[^a-zA-Z0-9 \-_.()]/g, '_')
           .replace(/\s+/g, '_')
           .replace(/_+/g, '_')
           .replace(/^_+|_+$/g, '')
           .substring(0, 80) || 'video';
         const filename = `${safeTitle}.${ext}`;
 
-        // /api/file/<sessionId>/<filename> — browser uses filename from URL path
         window.location.href = `/api/file/${sessionId}/${encodeURIComponent(filename)}`;
 
-        setTimeout(resetDownloadState, 4000);
+        setTimeout(() => {
+          resetDownloadState();
+          newDownloadRow.classList.remove('hidden');
+        }, 4000);
       }
 
       if (data.status === 'cancelled') {
         progressEventSource?.close();
         progressEventSource  = null;
         currentSessionId     = null;
+        isDownloading        = false;
         progressStatus.textContent  = 'İndirme iptal edildi.';
         progressPercent.textContent = '';
         progressBar.style.width     = '0%';
@@ -399,12 +510,11 @@ async function handleDownload() {
     };
 
     progressEventSource.onerror = () => {
+      if (!isDownloading) return;
+      if (progressPercent.textContent === '100%') return;
       progressEventSource?.close();
       progressEventSource = null;
-      // only show error if not already done/cancelled
-      if (isDownloading && progressPercent.textContent !== '100%') {
-        handleDownloadError('Bağlantı kesildi');
-      }
+      handleDownloadError('Sunucu bağlantısı kesildi');
     };
 
   } catch (err) {
@@ -416,10 +526,14 @@ async function handleDownload() {
 // Cancel
 // =====================
 async function handleCancel() {
-  if (!currentSessionId) return;
+  if (!currentSessionId) {
+    resetDownloadState();
+    return;
+  }
 
   const sid        = currentSessionId;
   currentSessionId = null;
+  isDownloading    = false;
 
   progressEventSource?.close();
   progressEventSource = null;
@@ -434,7 +548,7 @@ async function handleCancel() {
   progressStatus.textContent  = 'İndirme iptal edildi.';
   progressPercent.textContent = '';
   progressBar.style.width     = '0%';
-  setTimeout(resetDownloadState, 2000);
+  setTimeout(resetDownloadState, 1500);
 }
 
 // =====================
@@ -443,23 +557,21 @@ async function handleCancel() {
 function handleDownloadError(msg) {
   isDownloading = false;
   downloadBtn.classList.remove('downloading');
-  downloadBtnText.textContent = 'Tekrar Dene';
-  progressStatus.textContent  = `Hata: ${msg}`;
+  downloadBtnText.textContent = '↺ Tekrar Dene';
+  progressStatus.textContent  = `❌ Hata: ${msg}`;
   progressPercent.textContent = '';
   progressBar.style.width     = '0%';
-  progressBar.style.background= 'rgba(239,68,68,0.5)';
+  progressBar.style.background= 'rgba(239,68,68,0.35)';
 
   setTimeout(() => {
     progressBar.style.background = '';
-    isDownloading = false;
-    downloadBtn.classList.remove('downloading');
     if (selectedFormat) {
       const q = selectedFormat.isAudioOnly
-        ? 'MP3 Ses İndir'
-        : `${selectedFormat.label} ${(selectedFormat.ext||'MP4').toUpperCase()} İndir`;
+        ? '🎵 MP3 Ses İndir'
+        : `⬇ ${selectedFormat.label} ${(selectedFormat.ext||'MP4').toUpperCase()} İndir`;
       downloadBtnText.textContent = q;
     }
-  }, 3000);
+  }, 4000);
 }
 
 function resetDownloadState() {
@@ -468,8 +580,8 @@ function resetDownloadState() {
   progressInfo.classList.add('hidden');
   if (selectedFormat) {
     const q = selectedFormat.isAudioOnly
-      ? 'MP3 Ses İndir'
-      : `${selectedFormat.label} ${(selectedFormat.ext||'MP4').toUpperCase()} İndir`;
+      ? '🎵 MP3 Ses İndir'
+      : `⬇ ${selectedFormat.label} ${(selectedFormat.ext||'MP4').toUpperCase()} İndir`;
     downloadBtnText.textContent = q;
   }
 }

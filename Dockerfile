@@ -1,20 +1,23 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
-# ffmpeg kur (video+ses birleştirme için şart)
-RUN apt-get update && \
-    apt-get install -y ffmpeg && \
-    rm -rf /var/lib/apt/lists/*
+# Install ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Bağımlılıkları kur
+# Install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -U yt-dlp
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Proje dosyalarını kopyala
+# Copy source code
 COPY . .
 
-EXPOSE 10000
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PORT=3000
 
-CMD ["python", "server.py"]
+# Expose port
+EXPOSE 3000
+
+# Run with Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:3000", "--workers", "2", "--threads", "4", "--timeout", "120", "server:app"]

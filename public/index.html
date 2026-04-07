@@ -3,10 +3,11 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ahmet Video — Video İndirici</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>VidGet — Video İndirici</title>
   <meta name="description"
-    content="YouTube, Tiktok, Twitter ve 1000+ siteden 4K, 2K, 1080p video indirin. Ücretsiz, hızlı ve güvenilir." />
+    content="YouTube, TikTok, Twitter ve 1000+ siteden 4K, 2K, 1080p video indirin. Ücretsiz, hızlı ve güvenilir." />
+  <meta name="theme-color" content="#080810" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
@@ -39,7 +40,7 @@
             </defs>
           </svg>
         </div>
-        <span class="logo-text">Ahmet Video</span>
+        <span class="logo-text">VidGet</span>
       </div>
       <div class="header-badges">
         <span class="badge">4K</span>
@@ -49,81 +50,87 @@
     </div>
   </header>
 
+  <!-- Status Bar (shown only if tools missing) -->
+  <div class="status-bar hidden" id="statusBar">
+    <div class="status-bar-inner">
+      <span class="status-icon">⚠️</span>
+      <span id="statusBarText">ffmpeg bulunamadı — yüksek kalite indirme için gerekli</span>
+    </div>
+  </div>
+
   <!-- Main Content -->
   <main class="main">
     <!-- Hero -->
     <section class="hero">
       <div class="hero-tag">
         <span class="pulse-dot"></span>
-        YouTube • Tiktok • Twitter • Instagram vs. kisaca hepsınden indirebilirsiniz
+        YouTube • TikTok • Twitter • Instagram ve Daha Fazlası
       </div>
       <h1 class="hero-title">
-        canim arkadaslarim icin<br />
-        <span class="gradient-text">istediğiniz gibi video indirin</span><br />
-        <3 </h1>
-          <p class="hero-subtitle">sadece size özel ;)</p>
+        Yeni Nesil<br />
+        <span class="gradient-text">Ücretsiz Video İndirici</span>
+      </h1>
+      <p class="hero-subtitle">Hızlı, Ücretsiz ve Güvenilir — 1000+ Platform</p>
 
-          <!-- URL Input -->
-          <div class="input-container" id="inputContainer">
-            <div class="input-wrapper">
-              <div class="input-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                </svg>
-              </div>
-              <input type="url" id="urlInput" class="url-input"
-                placeholder="Video linkini buraya yapıştırın... (YouTube, Tiktok, Twitter...)" autocomplete="off"
-                spellcheck="false" />
-              <button class="paste-btn" id="pasteBtn" title="Panodan Yapıştır">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                </svg>
-              </button>
-            </div>
-            <button class="fetch-btn" id="fetchBtn">
-              <span class="btn-text"> video indir</span>
-              <span class="btn-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </span>
-            </button>
+      <!-- URL Input -->
+      <div class="input-container" id="inputContainer">
+        <div class="input-wrapper" id="inputWrapper">
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
           </div>
+          <input type="url" id="urlInput" class="url-input"
+            placeholder="Video linkini buraya yapıştırın... (YouTube, TikTok, Twitter...)" autocomplete="off"
+            spellcheck="false" autocorrect="off" autocapitalize="none" />
+          <button class="paste-btn" id="pasteBtn" title="Panodan Yapıştır">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </button>
+        </div>
+        <button class="fetch-btn" id="fetchBtn">
+          <span class="btn-text">Analiz Et</span>
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </span>
+        </button>
+      </div>
 
-          <!-- Supported Sites -->
-          <div class="supported-sites">
-            <div class="site-pill">
-              <svg class="site-icon yt" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-              </svg>
-              YouTube
-            </div>
-            <div class="site-pill">
-              <svg class="site-icon vimeo" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.17 0-.765.36-1.780 1.075L0 7.197a315.065 315.065 0 0 0 3.62-3.231C5.119 2.618 6.252 1.9 7.02 1.828c1.907-.183 3.081 1.122 3.523 3.917.475 3.008.805 4.884.991 5.627.550 2.496 1.153 3.742 1.813 3.742.512 0 1.284-.810 2.312-2.431 1.030-1.621 1.582-2.856 1.656-3.705.148-1.399-.404-2.101-1.656-2.101-.589 0-1.196.136-1.821.404 1.208-3.960 3.522-5.882 6.938-5.764 2.531.086 3.727 1.718 3.601 4.899z" />
-              </svg>
-              Vimeo
-            </div>
-            <div class="site-pill">
-              <svg class="site-icon twitter" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-              Twitter/X
-            </div>
-            <div class="site-pill">
-              <svg class="site-icon twitch" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
-              </svg>
-              Twitch
-            </div>
-            <div class="site-pill site-more">+1000 Site</div>
-          </div>
+      <!-- Supported Sites -->
+      <div class="supported-sites">
+        <div class="site-pill">
+          <svg class="site-icon yt" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+          </svg>
+          YouTube
+        </div>
+        <div class="site-pill">
+          <svg class="site-icon tiktok" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.69a8.26 8.26 0 0 0 4.83 1.55V6.79a4.85 4.85 0 0 1-1.07-.1z"/>
+          </svg>
+          TikTok
+        </div>
+        <div class="site-pill">
+          <svg class="site-icon twitter" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+          Twitter/X
+        </div>
+        <div class="site-pill">
+          <svg class="site-icon ig" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          Instagram
+        </div>
+        <div class="site-pill site-more">+1000 Site</div>
+      </div>
     </section>
 
     <!-- Loading State -->
@@ -214,6 +221,16 @@
         </div>
         <p class="progress-status" id="progressStatus">İndiriliyor...</p>
       </div>
+
+      <!-- New Download Button (shown after completion) -->
+      <div class="new-download-row hidden" id="newDownloadRow">
+        <button class="new-download-btn" id="newDownloadBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12l7-7 7 7"/>
+          </svg>
+          Yeni Video İndir
+        </button>
+      </div>
     </div>
 
     <!-- Features -->
@@ -224,8 +241,8 @@
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
           </svg>
         </div>
-        <h3>4K'ya kadar ındırebılıonuz</h3>
-        <p>videonun max kac destekliyosa o kadar çözünürlükte ındırın 4K 2K 1080p vs gibi</p>
+        <h3>4K Desteği</h3>
+        <p>Videonun desteklediği en yüksek çözünürlükte indirme yapın. 4K, 2K veya 1080p.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon feat-fast">
@@ -233,8 +250,8 @@
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
           </svg>
         </div>
-        <h3>cok hizli</h3>
-        <p>sızın icin optimize edilmiş indirme altyapısı ile videolarınızı saniyeler içinde ındırebilirsniz.</p>
+        <h3>Işık Hızında</h3>
+        <p>Optimize edilmiş indirme altyapısı ile videolarınızı saniyeler içinde indirebilirsiniz.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon feat-sites">
@@ -244,8 +261,8 @@
             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
           </svg>
         </div>
-        <h3>1000+ platform</h3>
-        <p>YouTube, Tiktok, Insta, Twitter, Twitch ve yuzlerce başka platformdan indirebılıonuz</p>
+        <h3>1000+ Platform</h3>
+        <p>YouTube, TikTok, Instagram, Twitter, Twitch ve yüzlerce platform desteklenir.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon feat-audio">
@@ -255,15 +272,15 @@
             <circle cx="18" cy="16" r="3" />
           </svg>
         </div>
-        <h3>ses olarakda indirebilionuz</h3>
-        <p>videolardan mp3 (ses) olarakda indirebilirsnz</p>
+        <h3>MP3 İndirme</h3>
+        <p>İsterseniz videolarınızı sadece ses (MP3) formatında yüksek kalitede indirebilirsiniz.</p>
       </div>
     </section>
   </main>
 
   <!-- Footer -->
   <footer class="footer">
-    <p>ahmet video — sadece arkadaslarım ve kendim icin</p>
+    <p>VidGet — Yeni Nesil Video İndirici &copy; 2026</p>
   </footer>
 
   <script src="app.js"></script>
